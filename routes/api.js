@@ -7,15 +7,15 @@ const { getUsers, updateUser, addUser, removeUser  } = require('../controllers/a
 router.get('/users', getUsers);
 router.put('/users', updateUser);
 router.post('/users', addUser);
-router.delete('/users', removeUser);
+router.delete('/users/:id', removeUser);
 
 router.get('/thoughts', getThoughts);
-router.put('/thoughts', updateThought);
+router.put('/thoughts/:id', updateThought);
 router.post('/thoughts', addThought);
-router.delete('/thoughts', removeThought);
+router.delete('/thoughts/:id', removeThought);
 
-router.post('/thoughts/$thought_id/reactions', addReaction);
-router.delete('/thoughts/$thought_id/reactions', removeReaction);
+router.post('/thoughts/:thoughtId/reactions', addReaction);
+router.delete('/thoughts/:thoughtId/reactions/:reactionId', removeReaction);
 
 module.exports = router;
 

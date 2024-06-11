@@ -1,4 +1,4 @@
-const { Thought } = require('../models/Thought'); 
+const Thought = require('../../models/Thought'); 
 
 async function getThoughts(req, res) {
   try {
@@ -26,15 +26,29 @@ async function addThought(req, res) {
 async function updateThought(req, res) {
   try {
     const { id } = req.params;
-    const updatedThought = await Thought.findByIdAndUpdate(id, req.body, { new: true });
+
+    console.log(`Updating thought with id: ${id}`);
+
+    const updatedThought = await Thought.findByIdAndUpdate(
+      id,
+      req.body,
+      { new: true }
+    );
+
+    console.log(`Updated thought: ${updatedThought}`);
+
     if (!updatedThought) {
       return res.status(404).json({ error: 'Thought not found' });
     }
     return res.json({ thought: updatedThought });
   } catch (error) {
+  
+    console.error(`Error updating thought: ${error.message}`);
     return res.status(500).json({ error: error.message });
   }
 }
+
+
 
 async function removeThought(req, res) {
   try {
@@ -68,16 +82,28 @@ async function addReaction(req, res) {
 async function removeReaction(req, res) {
   try {
     const { thoughtId, reactionId } = req.params;
+    console.log('Request params:', req.params);
+
     const thought = await Thought.findById(thoughtId);
     if (!thought) {
       return res.status(404).json({ error: 'Thought not found' });
     }
-    thought.reactions.id(reactionId).remove();
+
+    const reaction = thought.reactions.id(reactionId);
+    if (!reaction) {
+      return res.status(404).json({ error: 'Reaction not found' });
+    }
+    thought.reactions.pull(reactionId);
+  
     await thought.save();
+
     return res.json({ thought });
   } catch (error) {
+    console.error('Error removing reaction:', error.message);
     return res.status(500).json({ error: error.message });
   }
 }
+
+
 
 module.exports = { getThoughts, updateThought, addThought, removeThought, addReaction, removeReaction };

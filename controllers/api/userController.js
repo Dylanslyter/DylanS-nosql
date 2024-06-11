@@ -1,4 +1,4 @@
-const { User } = require('../models/index'); 
+const User = require('../../models/User'); 
 
 async function getUsers(req, res) {
   try {
@@ -26,16 +26,23 @@ async function addUser(req, res) {
 
 async function updateUser(req, res) {
   try {
-    const { id } = req.params;
-    const updatedUser = await User.findByIdAndUpdate(id, req.body, { new: true });
+    const { username } = req.params;
+    const updatedUser = await User.findOneAndUpdate(
+      { username },
+      req.body,
+      { new: true }
+    );
+
     if (!updatedUser) {
       return res.status(404).json({ error: 'User not found' });
     }
+
     return res.json({ user: updatedUser });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
 }
+
 
 async function removeUser(req, res) {
   try {
