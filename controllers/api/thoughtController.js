@@ -1,4 +1,4 @@
-const { Thought } = require('../models/index'); 
+const { Thought } = require('../models/Thought'); 
 
 async function getThoughts(req, res) {
   try {
